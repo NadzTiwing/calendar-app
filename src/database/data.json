@@ -1,0 +1,28 @@
+{
+  "events": [
+    {
+      "label": "Attend Party",
+      "status": "pending",
+      "date": "12/01/2022",
+      "id": "meet-2"
+    },
+    {
+      "label": "This is a test",
+      "status": "pending",
+      "date": "11/30/2022",
+      "id": "kHg9Svb"
+    },
+    {
+      "label": "Year end party",
+      "status": "pending",
+      "date": "12/30/2022",
+      "id": "0iBb70L"
+    },
+    {
+      "label": "Blackpanther movie",
+      "status": "done",
+      "date": "11/07/2022",
+      "id": "QDu_Pa5"
+    }
+  ]
+}

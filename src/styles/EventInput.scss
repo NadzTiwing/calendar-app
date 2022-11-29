@@ -1,0 +1,31 @@
+@import 'variables.scss';
+
+.content {
+    display: flex;
+    flex-direction: column;
+    #back-btn {
+        padding: 1em;
+        &:hover {
+            background: transparent !important;
+        }
+    }
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1em; 
+    .status-selection {
+        width: 30%;
+    }
+    .date-picker {
+        width: 50%;
+    }
+}
+
+.option-btn {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

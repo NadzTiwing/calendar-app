@@ -1,0 +1,62 @@
+@import 'variables.scss';
+
+//nav-bar
+.nav-bar {
+  height: 10%;
+  width: 100%;
+  padding: 1em;
+  background-color: $violet;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  #app-title {
+    color: white;
+    text-decoration: none;
+    font-size: 1.3em;
+    
+  }
+  #search-bar {
+    width: 60%;
+  }
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.event-card {
+  width: 50%;
+  margin: 2em auto;
+  padding: 1em;
+  .desc {
+    font-size: 1.3em;
+  }
+  .details {
+    @extend .space-between;
+    .status{
+      padding-right: 1.2em;
+      padding-left: 1.2em;
+      text-transform: uppercase;
+      background-color: $violet;
+    }
+  }
+  .event-card-body {
+    position: relative;
+    .edit-btn {
+      position: absolute;
+      right: 0;
+      color: $violet;
+    }
+  }
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  #add-btn {
+    width: 50%;
+    align-self: center;
+    margin-bottom: 2em;
+  }
+}
