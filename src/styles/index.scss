@@ -54,3 +54,10 @@ body {
     transition: 0.5s;
   }
 }
+
+.dropdown-item {
+  color: $dark !important;
+  &:hover {
+    color: $dark !important;
+  }
+}

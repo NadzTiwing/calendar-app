@@ -9,16 +9,32 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { server } from '../config';
 import { formatDate } from './../util/date';
+import { connect } from "react-redux";
+import { addEvent, deleteEvent, updateEvent } from '../util/redux/reducer';
 
-const InputEvent = () => {
+const mapStateToProps = (state) => {
+    return {
+        events: state
+    };
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getEvent: (id) => dispatch(getEvent(id)),
+        addEvent: (obj) => dispatch(addEvent(obj)),
+        updateEvent: (obj) => dispatch(updateEvent(obj)),
+        deleteEvent: (obj) => dispatch(deleteEvent(obj))
+    }
+}
+
+const InputEvent = (props) => {
     const params = useParams();
     const [label, setLabel] = useState("");
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState("pending");
     const today = new Date();
     const [eventDate, setEventDate] = useState(today);
     const navigate = useNavigate();
     const isCreate = params.id === "new" ? true:false;
-    const [startDate, setStartDate] = useState(new Date());
     
     useEffect(()=> {
         if(!isCreate) {
@@ -33,63 +49,41 @@ const InputEvent = () => {
     }, [params]);
 
 
-    const updateEvent = () => {
+    const saveChanges = () => {
         let evtDate = formatDate(eventDate, "mm/dd/yyyy");
-
-        if(isCreate) { //add new event
-            fetch(`${server}/events`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({label, status, date:evtDate})
-            })
-            .then(response => response.json())
-            .then(data => {
-                navigate("/");
-            })
-            .catch( err => {
-                alert("Oops, something wrong happened, please try again");
-                console.log("Error in adding new event: " +err);
+        if(!label) {
+            alert("Please enter a description of that event.");
+            return;
+        }
+        if(isCreate) { //add new event 
+            props.addEvent({
+                label: label, 
+                status: status, 
+                date: evtDate
             });
+            navigate("/");
         } else { //update specific event
-            fetch(`${server}/events/${params.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({label, status, date:evtDate})
-            })
-            .then(response => response.json())
-            .then(data => {
-                navigate("/");
-            })
-            .catch( err => {
-                alert("Oops, something wrong happened, please try again");
-                console.log("Error in updating the event: " +err);
+            props.updateEvent({
+                id: params.id,
+                label: label,
+                status: status,
+                date: evtDate
             });
+            navigate("/");
         }
     }
 
-    const deleteEvent = () => {
+    const removeEvent = () => {
         if(confirm("Are you sure you want to delete this event? ")) {
             let evtDate = formatDate(eventDate, "mm/dd/yyyy");
             if(!isCreate) { 
-                fetch(`${server}/events/${params.id}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({label, status, date:evtDate})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    navigate("/");
-                })
-                .catch( err => {
-                    alert("Oops, something wrong happened, please try again");
-                    console.log("Error in deleting the event: " +err);
+                props.deleteEvent({
+                    id: params.id,
+                    label: label,
+                    status: status,
+                    date: evtDate
                 });
+                navigate("/");
             }
         }
     }
@@ -111,7 +105,7 @@ const InputEvent = () => {
                     </FloatingLabel>
                     <div className="details">
                         <FloatingLabel controlId="status-selection" label="Status:" className="status-selection">
-                            <Form.Select aria-label="status selection" value={status} onChange={(evt)=>setStatus(status=>status=evt.target.value)}>
+                            <Form.Select aria-label="status selection" value={status} onChange={(evt)=>setStatus(status=> status=evt.target.value)}>
                                 <option value="pending">Pending</option>
                                 <option value="ongoing">Ongoing</option>
                                 <option value="done">Done</option>
@@ -125,9 +119,9 @@ const InputEvent = () => {
                         </div>
                     </div>
                     <div className="option-btn">
-                        <Button variant="purple" id="update-btn" onClick={updateEvent}> { isCreate ? "ADD" : "UPDATE"}  </Button>
+                        <Button variant="purple" id="update-btn" onClick={saveChanges}> { isCreate ? "ADD" : "UPDATE"}  </Button>
                         { !isCreate && 
-                            <Button variant="danger" id="delete-btn"  onClick={deleteEvent}> DELETE </Button>
+                            <Button variant="danger" id="delete-btn"  onClick={removeEvent}> DELETE </Button>
                         }
                     </div>
                     </Card.Body>
@@ -138,4 +132,4 @@ const InputEvent = () => {
     );
 }
 
-export default InputEvent;
+export default connect(mapStateToProps, mapDispatchToProps)(InputEvent);
